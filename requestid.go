@@ -15,7 +15,7 @@ import (
 func RequestId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Check for incoming header, use it if exists
-		request_id := c.Request.Header.Get("X-Request-Id")
+		requestID := c.Request.Header.Get("X-Request-Id")
 
 		// Create request id with UUID4
 		if request_id == "" {
@@ -24,10 +24,10 @@ func RequestId() gin.HandlerFunc {
 		}
 
 		// Expose it for use in the application
-		c.Set("RequestId", request_id)
+		c.Set("RequestId", requestID)
 
 		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", request_id)
+		c.Writer.Header().Set("X-Request-Id", requestID)
 		c.Next()
 	}
 }

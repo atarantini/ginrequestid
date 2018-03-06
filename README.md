@@ -1,6 +1,6 @@
 # Gingonic X-Request-Id middleware
 
-Basic middleware to add and expose an `UUID4 <https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29>`_ for each request based on the code posted on `Dan Sosedoff development and experiments <https://sosedoff.com/2014/12/21/gin-middleware.html>`_ website.
+Basic middleware to add and expose an [UUID4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29>) for each request based on the code posted on [Dan Sosedoff development and experiments](https://sosedoff.com/2014/12/21/gin-middleware.html) website.
 
 It will set the variable ``RequestId`` or order to use it from within the application for logging or propagation.
 
