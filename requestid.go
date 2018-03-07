@@ -18,9 +18,9 @@ func RequestId() gin.HandlerFunc {
 		requestID := c.Request.Header.Get("X-Request-Id")
 
 		// Create request id with UUID4
-		if request_id == "" {
-            uuid4, _ := uuid.NewV4()
-            requestID = uuid4.String()
+		if requestID == "" {
+			uuid4, _ := uuid.NewV4()
+			requestID = uuid4.String()
 		}
 
 		// Expose it for use in the application
