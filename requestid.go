@@ -9,25 +9,56 @@ package ginrequestid
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
-func RequestId() gin.HandlerFunc {
+// PanicOnUUIDError tells the middleware whether to panic if generating a requestID fails
+// or to eat up the error and just avoid setting a request ID altogether.
+var PanicOnUUIDError bool
+
+const (
+	// Header is the value of the header in which we expect to find the request id.
+	Header = "x-request-id"
+
+	// ContextKey is the key value of gins context in which the request id can be found.
+	ContextKey = "RequestId"
+)
+
+// RequestID is a helper function used for returning the
+// value of the request id from a gin context.
+func RequestID(c *gin.Context) string {
+	return c.GetString(ContextKey)
+}
+
+// RequestIDHandler middleware enriches the gin context .
+func RequestIDHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Check for incoming header, use it if exists
-		requestID := c.Request.Header.Get("X-Request-Id")
+		requestID := c.Request.Header.Get(Header)
 
-		// Create request id with UUID4
+		// Create request id with UUIDv4
 		if requestID == "" {
-			uuid4, _ := uuid.NewV4()
-			requestID = uuid4.String()
+			uuid, err := uuid.NewV4()
+
+			// If there's an error generating a UUID then the randomness source
+			// is depleted or something like that. We have no way of handling
+			// this on our own, so we panic if the user told us to do so.
+			if err != nil {
+				if PanicOnUUIDError {
+					panic(err)
+				}
+				c.Next()
+				return
+			}
+
+			requestID = uuid.String()
 		}
 
 		// Expose it for use in the application
-		c.Set("RequestId", requestID)
+		c.Set(ContextKey, requestID)
 
 		// Set X-Request-Id header
-		c.Writer.Header().Set("X-Request-Id", requestID)
+		c.Writer.Header().Set(Header, requestID)
 		c.Next()
 	}
 }
