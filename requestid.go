@@ -9,7 +9,7 @@ package ginrequestid
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 )
 
 func RequestId() gin.HandlerFunc {
